@@ -35,6 +35,7 @@ button {
 	cursor: pointer;
     margin: 0 auto;
     display: block;
+    margin-bottom: 20px;
 }
 
 img.img-pi {
