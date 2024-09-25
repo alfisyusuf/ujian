@@ -1,109 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Ujian</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Abidin Exam Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
     <style>
-        /* Resetting default margin and padding */
-        body, html {
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Set full width and height */
         body {
-            width: 100vw;
-            height: 100vh;
-            display: flex;
             background-image: url('pat/gambar/sebastian-luca-daily-0235.jpg');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e0e0e0;
         }
-
-        /* Container styles */
         .container {
-            width: 100%;
-            display: flex;
+            background-color: rgba(33, 37, 41, 0.85);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
-
-        /* Column styles */
-        .column {
-            flex: 1;
-            padding: 20px;
-            background: none;
+        .btn-level {
+            margin: 10px;
+            transition: transform 0.3s;
         }
-
-        /* Left column styles */
-        .left-column {
-            flex-basis: 30%;
+        .btn-level:hover {
+            transform: scale(1.05);
         }
-
-        /* Right column styles */
-        .right-column {
-            display: flex;
-            flex-direction: column-reverse;
+        .hidden {
+            display: none;
         }
-
-        .box {
-            max-width: 90%;
-            max-height: 30vh;
-            background-color: rgba(0, 0, 0, 0.5); /* Warna transparan dengan alpha 0.5 */
-            padding: 15px 20px 15px 20px;
-            margin-left: auto;
-            margin-right: auto;
+        h1, h2 {
+            color: #f8f9fa;
         }
-
-        .button {
-            background-color: #333; /* Warna gelap elegan */
-            color: #fff; /* Warna teks putih */
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        .button:hover {
-            background-color: #555; /* Warna gelap elegan pada hover */
-        }
-
-        .box p, h2 {
-            color: white;
-            font-size: 18px;
-            font-family: 'Open Sans', sans-serif;
+        .lead {
+            color: #ced4da;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet"> <!-- Menambahkan font Open Sans dari Google Fonts -->
 </head>
 <body>
-    <div class="container">
-        <div class="column left-column">
-            
-        </div>
-        <div class="column right-column">
-            <div class="box">
-                <h2>Good luck on your exam.</h2>
-                <p>Remember to pray before you start taking the exam. Your honesty is invaluable and will lead you to noble places.</p>
-                <button class="button" onclick="window.location.href='https://r654swsqr.alabidin.id/'">Go to the exam portal</button>
-
-                <!--Template di dalam box-->
-
-                <!--
-                
-                ###_____Aktif_____###
-                <h2>Good luck on your exam.</h2>
-                <p>Remember to pray before you start taking the exam. Your honesty is invaluable and will lead you to noble places.</p>
-                <button class="button" onclick="window.location.href='https://r654swsqr.alabidin.id/'">Go to the exam portal</button>
-
-                ###_____Expired_____###
-                <h2>Oops..</h2>
-                <p>The page you accessed has expired. Please use another .SEB file.</p>
-
-                -->
-                
-
+    <div class="container" data-aos="fade-up">
+        <div id="welcome-screen">
+            <h1 class="text-center mb-4">Welcome, Students!</h1>
+            <p class="lead text-center mb-5">Remember, honesty is the key to success. Strive with integrity and achieve your bright future!</p>
+            <div class="d-flex justify-content-center flex-wrap">
+                <button class="btn btn-outline-primary btn-lg btn-level" onclick="redirectToExam('X')">Level X</button>
+                <button class="btn btn-outline-success btn-lg btn-level" onclick="redirectToExam('XI')">Level XI</button>
+                <button class="btn btn-outline-warning btn-lg btn-level" onclick="showSubjects()">Level XII</button>
             </div>
         </div>
-    </div>    
+        <div id="subject-screen" class="hidden">
+            <h2 class="text-center mb-4">Choose Your Exam Subject</h2>
+            <div class="d-flex justify-content-center flex-wrap">
+                <button class="btn btn-outline-info btn-lg btn-level" onclick="redirectToExam('XII-Math')">Mock Test Math Cambridge</button>
+                <button class="btn btn-outline-danger btn-lg btn-level" onclick="redirectToExam('XII-ICT')">ICT</button>
+            </div>
+            <button class="btn btn-outline-secondary mt-3" onclick="backToWelcome()">Back</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init();
+
+        function redirectToExam(level) {
+            if (level === 'X' || level === 'XI') {
+                window.location.href = 'https://r654swsqr.alabidin.id/';
+            } else if (level === 'XII-Math') {
+                window.location.href = 'https://forms.gle/sUpT8eQ43UCcW3hu9';
+            } else if (level === 'XII-ICT') {
+                window.location.href = 'https://forms.gle/28YCU8kSoxE43DvD9';
+            }
+        }
+
+        function showSubjects() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('subject-screen').classList.remove('hidden');
+        }
+
+        function backToWelcome() {
+            document.getElementById('subject-screen').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
