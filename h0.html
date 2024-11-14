@@ -1,105 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al Abidin Exam Portal</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-    <style>
-        body {
-            background-image: url('pat/gambar/sebastian-luca-daily-0235.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #e0e0e0;
-        }
-        .container {
-            background-color: rgba(33, 37, 41, 0.85);
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-        }
-        .btn-level {
-            margin: 10px;
-            transition: transform 0.3s;
-        }
-        .btn-level:hover {
-            transform: scale(1.05);
-        }
-        .hidden {
-            display: none;
-        }
-        h1, h2 {
-            color: #f8f9fa;
-        }
-        .lead {
-            color: #ced4da;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Exam Motivation Page</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  
+  <!-- CSS Styles -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('./tes.webp') no-repeat center center fixed;
+      background-size: cover;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .motivational-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 30px 40px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 600px;
+      margin: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transform: translateY(-20px);
+    }
+
+    .motivational-box h2 {
+      font-size: 2.5em;
+      margin-bottom: 15px;
+      background: linear-gradient(45deg, #fff, #e0e0e0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    .motivational-box p {
+      font-size: 1.3em;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .exam-button {
+      background: linear-gradient(45deg, #4e54c8, #8f94fb);
+      color: #fff;
+      padding: 18px 40px;
+      border-radius: 50px;
+      margin-top: 30px;
+      font-size: 20px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
+    }
+
+    .exam-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(78, 84, 200, 0.4);
+    }
+
+    .exam-button:active {
+      transform: translateY(1px);
+    }
+
+    .exam-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: 0.5s;
+    }
+
+    .exam-button:hover::before {
+      left: 100%;
+    }
+
+    .rules {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    @media (max-width: 768px) {
+      .motivational-box {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .motivational-box h2 {
+        font-size: 2em;
+      }
+
+      .motivational-box p {
+        font-size: 1.1em;
+      }
+
+      .exam-button {
+        padding: 15px 30px;
+        font-size: 18px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container" data-aos="fade-up">
-        <div id="welcome-screen">
-            <h1 class="text-center mb-4">Welcome, Students!</h1>
-            <p class="lead text-center mb-5">Remember, honesty is the key to success. Strive with integrity and achieve your bright future!</p>
-            <div class="d-flex justify-content-center flex-wrap">
-                <button class="btn btn-outline-primary btn-lg btn-level" onclick="redirectToExam('X')">Level X</button>
-                <button class="btn btn-outline-success btn-lg btn-level" onclick="redirectToExam('XI')">Level XI</button>
-                <button class="btn btn-outline-warning btn-lg btn-level" onclick="showSubjects()">Level XII</button>
-            </div>
-        </div>
-        <div id="subject-screen" class="hidden">
-            <h2 class="text-center mb-4">Choose Your Exam Subject</h2>
-            <div class="d-flex justify-content-center flex-wrap">
-                <button class="btn btn-outline-success btn-lg btn-level" onclick="redirectToExam('XII-Physics')">Mock Test Physics</button>
-                <button class="btn btn-outline-primary btn-lg btn-level" onclick="redirectToExam('XII-Biology')">Mock Test Biology</button>
-                <button class="btn btn-outline-warning btn-lg btn-level" onclick="redirectToExam('XII-Chemistry')">Mock Test Chemistry</button>
-                <button class="btn btn-outline-info btn-lg btn-level" onclick="redirectToExam('XII-Math')">Mock Test Math Cambridge</button>
-                <button class="btn btn-outline-danger btn-lg btn-level" onclick="redirectToExam('XII-ICT')">ICT</button>
-            </div>
-            <button class="btn btn-outline-secondary mt-3" onclick="backToWelcome()">Back</button>
-        </div>
+  <!-- Particle Background -->
+  <div id="particles-js"></div>
+  
+  <!-- Main Content -->
+  <div class="overlay">
+    <div class="motivational-box animate__animated animate__fadeInDown">
+      <h2>Ready for Excellence!</h2>
+      <p>"Honesty is the mirror of true success. Give your best effort and let the results follow the process."</p>
+      <div class="rules">
+        Remember:
+        • Work with integrity
+        • Read questions carefully
+        • Stay focused
+      </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-        AOS.init();
-        function redirectToExam(level) {
-            switch(level) {
-                case 'X':
-                case 'XI':
-                    window.location.href = 'https://r654swsqr.alabidin.id/';
-                    break;
-                case 'XII-Physics':
-                    window.location.href = 'https://forms.gle/HeXuKLn3zBcLkNqH8';
-                    break;
-                case 'XII-Biology':
-                    window.location.href = 'https://forms.gle/qiNd3zrYZNkeo7Wu5';
-                    break;
-                case 'XII-Chemistry':
-                    window.location.href = 'https://forms.gle/eGAzuMYoK4LGpWYc9';
-                    break;
-                case 'XII-Math':
-                    window.location.href = 'https://forms.gle/sUpT8eQ43UCcW3hu9';
-                    break;
-                case 'XII-ICT':
-                    window.location.href = 'https://forms.gle/28YCU8kSoxE43DvD9';
-                    break;
-            }
+    <button class="exam-button animate__animated animate__fadeInUp" onclick="startExam()">Start Exam</button>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // Particle.js Configuration
+    particlesJS("particles-js", {
+      particles: {
+        number: {
+          value: 100,
+          density: { enable: true, value_area: 800 }
+        },
+        color: { value: "#ffffff" },
+        shape: {
+          type: "circle",
+          stroke: { width: 0, color: "#000000" },
+          polygon: { nb_sides: 5 }
+        },
+        opacity: {
+          value: 0.3,
+          random: true,
+          anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+        },
+        size: {
+          value: 3,
+          random: true,
+          anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
+        },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: "#ffffff",
+          opacity: 0.2,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          direction: "none",
+          random: true,
+          straight: false,
+          out_mode: "out",
+          bounce: false,
+          attract: { enable: false, rotateX: 600, rotateY: 1200 }
         }
-        function showSubjects() {
-            document.getElementById('welcome-screen').classList.add('hidden');
-            document.getElementById('subject-screen').classList.remove('hidden');
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "bubble" },
+          onclick: { enable: true, mode: "push" },
+          resize: true
+        },
+        modes: {
+          bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, speed: 3 },
+          push: { particles_nb: 4 },
         }
-        function backToWelcome() {
-            document.getElementById('subject-screen').classList.add('hidden');
-            document.getElementById('welcome-screen').classList.remove('hidden');
-        }
-    </script>
+      },
+      retina_detect: true
+    });
+
+    // Start exam function
+    function startExam() {
+      // Add your exam start logic here
+      const button = document.querySelector('.exam-button');
+      button.disabled = true;
+      button.textContent = 'Starting Exam...';
+      button.style.opacity = '0.7';
+      
+      // Redirect to exam page after animation
+      setTimeout(() => {
+        // Replace with your exam page URL
+        // window.location.href = 'exam.html';
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
