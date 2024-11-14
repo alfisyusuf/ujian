@@ -1,250 +1,362 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pre-Exam Motivation Page</title>
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Animate.css -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  
-  <!-- CSS Styles -->
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pre-Exam Motivation Page</title>
 
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: url('./tes.webp') no-repeat center center fixed;
-      background-size: cover;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: #fff;
-    }
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+        />
 
-    #particles-js {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-    .overlay {
-      background: rgba(0, 0, 0, 0.6);
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 2;
-    }
+            body {
+                margin: 0;
+                font-family: "Poppins", sans-serif;
+                background: url("./tes.webp") no-repeat center center fixed;
+                background-size: cover;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                color: #fff;
+            }
 
-    .motivational-box {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 30px 40px;
-      border-radius: 20px;
-      text-align: center;
-      max-width: 600px;
-      margin: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transform: translateY(-20px);
-    }
+            #particles-js {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+            }
 
-    .motivational-box h2 {
-      font-size: 2.5em;
-      margin-bottom: 15px;
-      background: linear-gradient(45deg, #fff, #e0e0e0);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 700;
-    }
+            .overlay {
+                background: rgba(0, 0, 0, 0.6);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 2;
+            }
 
-    .motivational-box p {
-      font-size: 1.3em;
-      line-height: 1.6;
-      margin-bottom: 20px;
-      color: rgba(255, 255, 255, 0.9);
-    }
+            .motivational-box {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                padding: 30px 40px;
+                border-radius: 20px;
+                text-align: center;
+                max-width: 600px;
+                margin: 20px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                transform: translateY(-20px);
+            }
 
-    .exam-button {
-      background: linear-gradient(45deg, #4e54c8, #8f94fb);
-      color: #fff;
-      padding: 18px 40px;
-      border-radius: 50px;
-      margin-top: 30px;
-      font-size: 20px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
-    }
+            .motivational-box h2 {
+                font-size: 2.5em;
+                margin-bottom: 15px;
+                background: linear-gradient(45deg, #fff, #e0e0e0);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 700;
+            }
 
-    .exam-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(78, 84, 200, 0.4);
-    }
+            .motivational-box p {
+                font-size: 1.3em;
+                line-height: 1.6;
+                margin-bottom: 20px;
+                color: rgba(255, 255, 255, 0.9);
+            }
 
-    .exam-button:active {
-      transform: translateY(1px);
-    }
+            .exam-button {
+                background: linear-gradient(45deg, #4e54c8, #8f94fb);
+                color: #fff;
+                padding: 18px 40px;
+                border-radius: 50px;
+                margin-top: 30px;
+                font-size: 20px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
+            }
 
-    .exam-button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-      );
-      transition: 0.5s;
-    }
+            .exam-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 25px rgba(78, 84, 200, 0.4);
+            }
 
-    .exam-button:hover::before {
-      left: 100%;
-    }
+            .exam-button:active {
+                transform: translateY(1px);
+            }
 
-    .rules {
-      margin-top: 20px;
-      font-size: 0.9em;
-      color: rgba(255, 255, 255, 0.7);
-    }
+            .exam-button::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    120deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent
+                );
+                transition: 0.5s;
+            }
 
-    @media (max-width: 768px) {
-      .motivational-box {
-        margin: 20px;
-        padding: 20px;
-      }
+            .exam-button:hover::before {
+                left: 100%;
+            }
 
-      .motivational-box h2 {
-        font-size: 2em;
-      }
+            .rules {
+                margin-top: 20px;
+                font-size: 0.9em;
+                color: rgba(255, 255, 255, 0.7);
+            }
 
-      .motivational-box p {
-        font-size: 1.1em;
-      }
+            .session-info {
+                margin-top: 15px;
+                padding: 10px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+                font-size: 0.9em;
+            }
 
-      .exam-button {
-        padding: 15px 30px;
-        font-size: 18px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- Particle Background -->
-  <div id="particles-js"></div>
-  
-  <!-- Main Content -->
-  <div class="overlay">
-    <div class="motivational-box animate__animated animate__fadeInDown">
-      <h2>Ready for Excellence!</h2>
-      <p>"Honesty is the mirror of true success. Give your best effort and let the results follow the process."</p>
-      <div class="rules">
-        Remember:
-        • Work with integrity
-        • Read questions carefully
-        • Stay focused
-      </div>
-    </div>
-    <button class="exam-button animate__animated animate__fadeInUp" onclick="startExam()">Start Exam</button>
-  </div>
+            @media (max-width: 768px) {
+                .motivational-box {
+                    margin: 20px;
+                    padding: 20px;
+                }
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script>
-    // Particle.js Configuration
-    particlesJS("particles-js", {
-      particles: {
-        number: {
-          value: 100,
-          density: { enable: true, value_area: 800 }
-        },
-        color: { value: "#ffffff" },
-        shape: {
-          type: "circle",
-          stroke: { width: 0, color: "#000000" },
-          polygon: { nb_sides: 5 }
-        },
-        opacity: {
-          value: 0.3,
-          random: true,
-          anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
-        },
-        size: {
-          value: 3,
-          random: true,
-          anim: { enable: true, speed: 2, size_min: 0.1, sync: false }
-        },
-        line_linked: {
-          enable: true,
-          distance: 150,
-          color: "#ffffff",
-          opacity: 0.2,
-          width: 1
-        },
-        move: {
-          enable: true,
-          speed: 2,
-          direction: "none",
-          random: true,
-          straight: false,
-          out_mode: "out",
-          bounce: false,
-          attract: { enable: false, rotateX: 600, rotateY: 1200 }
-        }
-      },
-      interactivity: {
-        detect_on: "canvas",
-        events: {
-          onhover: { enable: true, mode: "bubble" },
-          onclick: { enable: true, mode: "push" },
-          resize: true
-        },
-        modes: {
-          bubble: { distance: 200, size: 4, duration: 2, opacity: 0.8, speed: 3 },
-          push: { particles_nb: 4 },
-        }
-      },
-      retina_detect: true
-    });
+                .motivational-box h2 {
+                    font-size: 2em;
+                }
 
-    // Start exam function
-    function startExam() {
-      // Add your exam start logic here
-      const button = document.querySelector('.exam-button');
-      button.disabled = true;
-      button.textContent = 'Starting Exam...';
-      button.style.opacity = '0.7';
-      
-      // Redirect to exam page after animation
-      setTimeout(() => {
-        // Replace with your exam page URL
-        // window.location.href = 'exam.html';
-      }, 1000);
-    }
-  </script>
-</body>
+                .motivational-box p {
+                    font-size: 1.1em;
+                }
+
+                .exam-button {
+                    padding: 15px 30px;
+                    font-size: 18px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="particles-js"></div>
+
+        <div class="overlay">
+            <div
+                id="content-box"
+                class="motivational-box animate__animated animate__fadeInDown"
+            >
+                <!-- Content will be dynamically inserted here -->
+            </div>
+            <button
+                id="exam-button"
+                class="exam-button animate__animated animate__fadeInUp"
+                onclick="startExam()"
+                style="display: none"
+            >
+                Go to Exam Portal
+            </button>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+        <script>
+            // Particle.js Configuration
+            particlesJS("particles-js", {
+                particles: {
+                    number: {
+                        value: 100,
+                        density: { enable: true, value_area: 800 },
+                    },
+                    color: { value: "#ffffff" },
+                    shape: {
+                        type: "circle",
+                        stroke: { width: 0, color: "#000000" },
+                        polygon: { nb_sides: 5 },
+                    },
+                    opacity: {
+                        value: 0.3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false,
+                        },
+                    },
+                    size: {
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 0.1,
+                            sync: false,
+                        },
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.2,
+                        width: 1,
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false,
+                        attract: { enable: false, rotateX: 600, rotateY: 1200 },
+                    },
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "bubble" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true,
+                    },
+                    modes: {
+                        bubble: {
+                            distance: 200,
+                            size: 4,
+                            duration: 2,
+                            opacity: 0.8,
+                            speed: 3,
+                        },
+                        push: { particles_nb: 4 },
+                    },
+                },
+                retina_detect: true,
+            });
+
+            // Function to format date
+            function formatDateTime(dateString) {
+                const options = {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                };
+                return new Date(dateString).toLocaleDateString(
+                    "id-ID",
+                    options,
+                );
+            }
+
+            // Check exam session status
+            async function checkExamSession() {
+                try {
+                    const response = await fetch("exam-sessions.json");
+                    const data = await response.json();
+
+                    const now = new Date().getTime();
+                    const currentSession = data.sessions.find((session) => {
+                        const startTime = new Date(session.startTime).getTime();
+                        const endTime = new Date(session.endTime).getTime();
+                        return now >= startTime && now <= endTime;
+                    });
+
+                    const contentBox = document.getElementById("content-box");
+                    const examButton = document.getElementById("exam-button");
+
+                    if (currentSession) {
+                        // Active session content
+                        contentBox.innerHTML = `
+                            <h2>Ready for Excellence!</h2>
+                            <p>"Honesty is the mirror of true success. Give your best effort and let the results follow the process."</p>
+                            <div class="rules">
+                                Remember: • Work with integrity • Read questions carefully • Stay focused
+                            </div>
+                            <div class="session-info">
+                                Session: ${currentSession.name}<br>
+                                Ends at: ${formatDateTime(currentSession.endTime)}
+                            </div>
+                        `;
+                        examButton.style.display = "block";
+                    } else {
+                        // No active session content
+                        const nextSession = data.sessions.find(
+                            (session) =>
+                                new Date(session.startTime).getTime() > now,
+                        );
+
+                        if (nextSession) {
+                            contentBox.innerHTML = `
+                                <h2>No Active Session</h2>
+                                <p>The next exam session is scheduled for:</p>
+                                <div class="session-info">
+                                    ${nextSession.name}<br>
+                                    Start: ${formatDateTime(nextSession.startTime)}<br>
+                                    End: ${formatDateTime(nextSession.endTime)}
+                                </div>
+                                <p>Please return during the scheduled time.</p>
+                            `;
+                        } else {
+                            contentBox.innerHTML = `
+                                <h2>No Sessions Available</h2>
+                                <p>There are currently no scheduled exam sessions.</p>
+                                <p>Please check back later or contact your administrator for more information.</p>
+                            `;
+                        }
+                        examButton.style.display = "none";
+                    }
+                } catch (error) {
+                    console.error("Error loading exam sessions:", error);
+                    document.getElementById("content-box").innerHTML = `
+                        <h2>System Error</h2>
+                        <p>Unable to load exam session information.</p>
+                        <p>Please refresh the page or contact support if the problem persists.</p>
+                    `;
+                }
+            }
+
+            // Start exam function
+            function startExam() {
+                const button = document.querySelector(".exam-button");
+                button.disabled = true;
+                button.textContent = "Heading There ...";
+                button.style.opacity = "0.7";
+
+                setTimeout(() => {
+                    window.location.href = "https://74poo200dx2.alabidin.id/";
+                }, 1000);
+            }
+
+            // Check session status when page loads
+            checkExamSession();
+
+            // Recheck status every minute
+            setInterval(checkExamSession, 60000);
+        </script>
+    </body>
 </html>
