@@ -276,20 +276,44 @@
             // Check exam session status
             async function checkExamSession() {
                 try {
+                    console.log("Checking exam session...");
                     const response = await fetch("exam-sessions.json");
+                    if (!response.ok) {
+                        throw new Error(
+                            `HTTP error! status: ${response.status}`,
+                        );
+                    }
                     const data = await response.json();
+                    console.log("Loaded session data:", data);
 
                     const now = new Date().getTime();
+                    console.log("Current time:", new Date(now).toISOString());
+
                     const currentSession = data.sessions.find((session) => {
                         const startTime = new Date(session.startTime).getTime();
                         const endTime = new Date(session.endTime).getTime();
-                        return now >= startTime && now <= endTime;
+                        console.log("Checking session:", session.name);
+                        console.log(
+                            "Start time:",
+                            new Date(startTime).toISOString(),
+                        );
+                        console.log(
+                            "End time:",
+                            new Date(endTime).toISOString(),
+                        );
+                        const isActive = now >= startTime && now <= endTime;
+                        console.log("Is active:", isActive);
+                        return isActive;
                     });
 
                     const contentBox = document.getElementById("content-box");
                     const examButton = document.getElementById("exam-button");
 
                     if (currentSession) {
+                        console.log(
+                            "Found active session:",
+                            currentSession.name,
+                        );
                         // Active session content
                         contentBox.innerHTML = `
                             <h2>Ready for Excellence!</h2>
@@ -304,13 +328,20 @@
                         `;
                         examButton.style.display = "block";
                     } else {
+                        console.log("No active session found");
                         // No active session content
-                        const nextSession = data.sessions.find(
-                            (session) =>
-                                new Date(session.startTime).getTime() > now,
-                        );
+                        const nextSession = data.sessions.find((session) => {
+                            const startTime = new Date(
+                                session.startTime,
+                            ).getTime();
+                            return startTime > now;
+                        });
 
                         if (nextSession) {
+                            console.log(
+                                "Found next session:",
+                                nextSession.name,
+                            );
                             contentBox.innerHTML = `
                                 <h2>No Active Session</h2>
                                 <p>The next exam session is scheduled for:</p>
@@ -322,6 +353,7 @@
                                 <p>Please return during the scheduled time.</p>
                             `;
                         } else {
+                            console.log("No future sessions found");
                             contentBox.innerHTML = `
                                 <h2>No Sessions Available</h2>
                                 <p>There are currently no scheduled exam sessions.</p>
@@ -331,11 +363,12 @@
                         examButton.style.display = "none";
                     }
                 } catch (error) {
-                    console.error("Error loading exam sessions:", error);
+                    console.error("Detailed error:", error);
                     document.getElementById("content-box").innerHTML = `
                         <h2>System Error</h2>
                         <p>Unable to load exam session information.</p>
-                        <p>Please refresh the page or contact support if the problem persists.</p>
+                        <p>Error details: ${error.message}</p>
+                        <p>Please check that exam-sessions.json exists and is properly formatted.</p>
                     `;
                 }
             }
