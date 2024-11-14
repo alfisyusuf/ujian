@@ -277,7 +277,9 @@
             async function checkExamSession() {
                 try {
                     console.log("Checking exam session...");
-                    const response = await fetch("sessions.json");
+                    const response = await fetch("/sessions.json", {
+                        headers: { "Content-Type": "application/json" },
+                    });
                     if (!response.ok) {
                         throw new Error(
                             `HTTP error! status: ${response.status}`,
@@ -287,23 +289,10 @@
                     console.log("Loaded session data:", data);
 
                     const now = new Date().getTime();
-                    console.log("Current time:", new Date(now).toISOString());
-
                     const currentSession = data.sessions.find((session) => {
                         const startTime = new Date(session.startTime).getTime();
                         const endTime = new Date(session.endTime).getTime();
-                        console.log("Checking session:", session.name);
-                        console.log(
-                            "Start time:",
-                            new Date(startTime).toISOString(),
-                        );
-                        console.log(
-                            "End time:",
-                            new Date(endTime).toISOString(),
-                        );
-                        const isActive = now >= startTime && now <= endTime;
-                        console.log("Is active:", isActive);
-                        return isActive;
+                        return now >= startTime && now <= endTime;
                     });
 
                     const contentBox = document.getElementById("content-box");
@@ -314,82 +303,36 @@
                             "Found active session:",
                             currentSession.name,
                         );
-                        // Active session content
                         contentBox.innerHTML = `
                             <h2>Ready for Excellence!</h2>
-                            <p>"Honesty is the mirror of true success. Give your best effort and let the results follow the process."</p>
-                            <div class="rules">
-                                Remember: • Work with integrity • Read questions carefully • Stay focused
-                            </div>
-                            <div class="session-info">
-                                Session: ${currentSession.name}<br>
-                                Ends at: ${formatDateTime(currentSession.endTime)}
-                            </div>
+                            <p>"Honesty is the mirror of true success. Give your best effort and let the results speak for themselves."</p>
+                            <p class="session-info">Session: ${currentSession.name}</p>
+                            <p class="session-info">Start Time: ${formatDateTime(currentSession.startTime)}</p>
+                            <p class="session-info">End Time: ${formatDateTime(currentSession.endTime)}</p>
                         `;
-                        examButton.style.display = "block";
+                        examButton.style.display = "block"; // Show the exam portal button
                     } else {
-                        console.log("No active session found");
-                        // No active session content
-                        const nextSession = data.sessions.find((session) => {
-                            const startTime = new Date(
-                                session.startTime,
-                            ).getTime();
-                            return startTime > now;
-                        });
-
-                        if (nextSession) {
-                            console.log(
-                                "Found next session:",
-                                nextSession.name,
-                            );
-                            contentBox.innerHTML = `
-                                <h2>No Active Session</h2>
-                                <p>The next exam session is scheduled for:</p>
-                                <div class="session-info">
-                                    ${nextSession.name}<br>
-                                    Start: ${formatDateTime(nextSession.startTime)}<br>
-                                    End: ${formatDateTime(nextSession.endTime)}
-                                </div>
-                                <p>Please return during the scheduled time.</p>
-                            `;
-                        } else {
-                            console.log("No future sessions found");
-                            contentBox.innerHTML = `
-                                <h2>No Sessions Available</h2>
-                                <p>There are currently no scheduled exam sessions.</p>
-                                <p>Please check back later or contact your administrator for more information.</p>
-                            `;
-                        }
-                        examButton.style.display = "none";
+                        contentBox.innerHTML = `
+                            <h2>Stay Tuned!</h2>
+                            <p>The exam session is not yet available. Please check back later.</p>
+                        `;
                     }
                 } catch (error) {
-                    console.error("Detailed error:", error);
+                    console.error("Error fetching session data:", error);
                     document.getElementById("content-box").innerHTML = `
-                        <h2>System Error</h2>
-                        <p>Unable to load exam session information.</p>
-                        <p>Error details: ${error.message}</p>
-                        <p>Please check that exam-sessions.json exists and is properly formatted.</p>
+                        <h2>Something Went Wrong</h2>
+                        <p>Unable to load exam session details. Please try again later.</p>
                     `;
                 }
             }
 
-            // Start exam function
+            // Start Exam function
             function startExam() {
-                const button = document.querySelector(".exam-button");
-                button.disabled = true;
-                button.textContent = "Heading There ...";
-                button.style.opacity = "0.7";
-
-                setTimeout(() => {
-                    window.location.href = "https://74poo200dx2.alabidin.id/";
-                }, 1000);
+                window.location.href = "https://74poo200dx2.alabidin.id/"; // Redirect to the exam portal
             }
 
-            // Check session status when page loads
+            // Load the session data and check the exam session when the page loads
             checkExamSession();
-
-            // Recheck status every minute
-            setInterval(checkExamSession, 60000);
         </script>
     </body>
 </html>
