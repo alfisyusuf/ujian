@@ -277,7 +277,7 @@
             async function checkExamSession() {
                 try {
                     console.log("Checking exam session...");
-                    const response = await fetch("exam-sessions.json");
+                    const response = await fetch("sessions.json");
                     if (!response.ok) {
                         throw new Error(
                             `HTTP error! status: ${response.status}`,
