@@ -2,8 +2,8 @@
   "sessions": [
     {
       "name": "Uji Coba 1",
-      "startTime": "2024-11-18T08:00:00+07:00",
-      "endTime": "2024-11-18T12:00:00+07:00",
+      "startTime": "2024-11-18T13:00:00+07:00",
+      "endTime": "2024-11-18T15:00:00+07:00",
       "loginPassword": "masuk1",
       "exitPassword": "keluar1"
     },
