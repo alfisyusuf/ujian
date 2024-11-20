@@ -322,6 +322,51 @@
                 }
             }
 
+            .version-text {
+                font-size: 0.8em;
+                color: rgba(255, 255, 255, 0.7);
+                margin-top: 5px;
+            }
+            
+            /* Update platform card width for better spacing */
+            .platform-card {
+                background: rgba(78, 84, 200, 0.1);
+                border: 1px solid rgba(78, 84, 200, 0.3);
+                padding: 30px;
+                border-radius: 15px;
+                width: 320px;
+                transition: transform 0.3s ease;
+            }
+            
+            /* Add divider style */
+            .button-divider {
+                margin: 15px 0;
+                font-size: 0.9em;
+                color: rgba(255, 255, 255, 0.6);
+                display: flex;
+                align-items: center;
+                text-align: center;
+            }
+
+            .button-divider:before,
+            .button-divider:after {
+                content: "";
+                flex: 1;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .button-divider span {
+                margin: 0 10px;
+            }
+
+            /* Version header style */
+            .version-header {
+                font-size: 0.9em;
+                color: rgba(255, 255, 255, 0.9);
+                margin-bottom: 10px;
+                font-weight: 600;
+            }
+
             @media (max-width: 768px) {
                 .download-box,
                 .instructions-box {
@@ -366,45 +411,41 @@
                 </p>
 
                 <div class="platforms">
-                    <div
-                        class="platform-card animate__animated animate__fadeInLeft"
-                    >
+                    <div class="platform-card animate__animated animate__fadeInLeft">
                         <div class="platform-icon">🪟</div>
                         <h2>Windows</h2>
-                        <p>For Windows 8, 10 & 11</p>
+                        <p>For Windows</p>
                         <div class="download-buttons">
-                            <button
-                                onclick="downloadFile('windows', 'drive')"
-                                class="download-btn"
-                            >
+                            <div class="version-header">Windows 11 Version</div>
+                            <button onclick="downloadFile('windows', 'drive')" class="download-btn">
                                 Download from Drive
                             </button>
-                            <button
-                                onclick="downloadFile('windows', 'up4ever')"
-                                class="download-btn alternate"
-                            >
+                            <button onclick="downloadFile('windows', 'up4ever')" class="download-btn alternate">
                                 Download from Up4ever
                             </button>
+                            
+                            <div class="button-divider"><span>or</span></div>
+                            
+                            <div class="version-header">Windows 10 Version</div>
+                            <button onclick="downloadFile('windows10', 'drive')" class="download-btn">
+                                Download from Drive
+                            </button>
+                            <button onclick="downloadFile('windows10', 'up4ever')" class="download-btn alternate">
+                                Download from Up4ever
+                            </button>
+                            <p class="version-text">Specifically optimized for Windows 10</p>
                         </div>
                     </div>
 
-                    <div
-                        class="platform-card animate__animated animate__fadeInRight"
-                    >
+                    <div class="platform-card animate__animated animate__fadeInRight">
                         <div class="platform-icon">🍎</div>
                         <h2>macOS</h2>
                         <p>For macOS 10.15 and above</p>
                         <div class="download-buttons">
-                            <button
-                                onclick="downloadFile('mac', 'drive')"
-                                class="download-btn"
-                            >
+                            <button onclick="downloadFile('mac', 'drive')" class="download-btn">
                                 Download from Drive
                             </button>
-                            <button
-                                onclick="downloadFile('mac', 'up4ever')"
-                                class="download-btn alternate"
-                            >
+                            <button onclick="downloadFile('mac', 'up4ever')" class="download-btn alternate">
                                 Download from Up4ever
                             </button>
                         </div>
@@ -534,6 +575,10 @@
                     windows: {
                         drive: "https://drive.google.com/uc?export=download&id=18VoJN9J97sUitjfvhZ9ALCDN-CjCa4FZ",
                         up4ever: "https://www.up-4ever.net/94ejmzcj2rh5",
+                    },
+                    windows10: {
+                        drive: "https://drive.google.com/file/d/16HbQg3Msg3Z72Ibeug2tdGJHBSO_VUye/view?usp=drive_link",
+                        up4ever: "PASTE_WINDOWS_10_UP4EVER_LINK_HERE",
                     },
                     mac: {
                         drive: "https://drive.google.com/uc?export=download&id=1YiiITwmrn-3wokKM0QLGVXkiUcAfuvw9",
