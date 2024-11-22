@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Pre-Exam Motivation Page</title>
+        <title>Download New Version</title>
 
         <link
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
@@ -71,7 +71,7 @@
             .motivational-box h2 {
                 font-size: 2.5em;
                 margin-bottom: 15px;
-                background: linear-gradient(45deg, #fff, #e0e0e0);
+                background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 font-weight: 700;
@@ -84,10 +84,10 @@
                 color: rgba(255, 255, 255, 0.9);
             }
 
-            .session-badge {
+            .notice-badge {
                 display: inline-block;
-                background: rgba(78, 84, 200, 0.2);
-                border: 1px solid rgba(78, 84, 200, 0.3);
+                background: rgba(255, 107, 107, 0.2);
+                border: 1px solid rgba(255, 107, 107, 0.3);
                 padding: 8px 15px;
                 border-radius: 30px;
                 font-size: 0.9em;
@@ -97,35 +97,18 @@
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             }
 
-            .session-badge i {
+            .notice-badge i {
                 display: inline-block;
                 width: 8px;
                 height: 8px;
-                background: #4e54c8;
+                background: #ff6b6b;
                 border-radius: 50%;
                 margin-right: 8px;
                 animation: pulse 2s infinite;
             }
 
-            @keyframes pulse {
-                0% {
-                    transform: scale(0.95);
-                    box-shadow: 0 0 0 0 rgba(78, 84, 200, 0.7);
-                }
-
-                70% {
-                    transform: scale(1);
-                    box-shadow: 0 0 0 10px rgba(78, 84, 200, 0);
-                }
-
-                100% {
-                    transform: scale(0.95);
-                    box-shadow: 0 0 0 0 rgba(78, 84, 200, 0);
-                }
-            }
-
-            .exam-button {
-                background: linear-gradient(45deg, #4e54c8, #8f94fb);
+            .download-button {
+                background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
                 color: #fff;
                 padding: 18px 40px;
                 border-radius: 50px;
@@ -136,19 +119,21 @@
                 transition: all 0.3s ease;
                 position: relative;
                 overflow: hidden;
-                box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
+                box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+                text-decoration: none;
+                display: inline-block;
             }
 
-            .exam-button:hover {
+            .download-button:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 10px 25px rgba(78, 84, 200, 0.4);
+                box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
             }
 
-            .exam-button:active {
+            .download-button:active {
                 transform: translateY(1px);
             }
 
-            .exam-button::before {
+            .download-button::before {
                 content: "";
                 position: absolute;
                 top: 0;
@@ -164,7 +149,7 @@
                 transition: 0.5s;
             }
 
-            .exam-button:hover::before {
+            .download-button:hover::before {
                 left: 100%;
             }
 
@@ -182,7 +167,7 @@
                     font-size: 1.1em;
                 }
 
-                .exam-button {
+                .download-button {
                     padding: 15px 30px;
                     font-size: 18px;
                 }
@@ -193,25 +178,20 @@
         <div id="particles-js"></div>
 
         <div class="overlay">
-            <div
-                id="content-box"
-                class="motivational-box animate__animated animate__fadeInDown"
-            >
-                <!-- Content will be dynamically inserted here -->
+            <div class="motivational-box animate__animated animate__fadeInDown">
+                <h2>Application Update Required</h2>
+                <p>This version is no longer in use. Please download the latest version to continue.</p>
+                <div class="notice-badge">
+                    <i></i>New Version Available
+                </div>
             </div>
-            <button
-                id="exam-button"
-                class="exam-button animate__animated animate__fadeInUp"
-                onclick="startExam()"
-                style="display: none"
-            >
-                Go to Exam Portal
-            </button>
+            <a href="#" class="download-button animate__animated animate__fadeInUp">
+                Download New Version
+            </a>
         </div>
 
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
         <script>
-            // Particle.js Configuration
             particlesJS("particles-js", {
                 particles: {
                     number: {
@@ -282,67 +262,6 @@
                 },
                 retina_detect: true,
             });
-
-            // Check exam session status
-            async function checkExamSession() {
-                try {
-                    console.log("Checking exam session...");
-                    const response = await fetch("/sessions.json", {
-                        headers: { "Content-Type": "application/json" },
-                    });
-                    if (!response.ok) {
-                        throw new Error(
-                            `HTTP error! status: ${response.status}`,
-                        );
-                    }
-                    const data = await response.json();
-                    console.log("Loaded session data:", data);
-
-                    const now = new Date().getTime();
-                    const currentSession = data.sessions.find((session) => {
-                        const startTime = new Date(session.startTime).getTime();
-                        const endTime = new Date(session.endTime).getTime();
-                        return now >= startTime && now <= endTime;
-                    });
-
-                    const contentBox = document.getElementById("content-box");
-                    const examButton = document.getElementById("exam-button");
-
-                    if (currentSession) {
-                        console.log(
-                            "Found active session:",
-                            currentSession.name,
-                        );
-                        contentBox.innerHTML = `
-                            <h2>Ready for Excellence!</h2>
-                            <p>"Honesty is the mirror of true success. Give your best effort and let the results speak for themselves."</p>
-                            <div class="session-badge">
-                                <i></i>Session Active: ${currentSession.name}
-                            </div>
-                        `;
-                        examButton.style.display = "block";
-                    } else {
-                        contentBox.innerHTML = `
-                            <h2>Stay Tuned!</h2>
-                            <p>The exam session is not yet available. Please check back later.</p>
-                        `;
-                    }
-                } catch (error) {
-                    console.error("Error fetching session data:", error);
-                    document.getElementById("content-box").innerHTML = `
-                        <h2>Something Went Wrong</h2>
-                        <p>Unable to load exam session details. Please try again later.</p>
-                    `;
-                }
-            }
-
-            // Start Exam function
-            function startExam() {
-                window.location.href = "https://74poo200dx2.alabidin.id/";
-            }
-
-            // Load the session data and check the exam session when the page loads
-            checkExamSession();
         </script>
     </body>
 </html>
