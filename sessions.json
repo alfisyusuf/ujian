@@ -1,11 +1,11 @@
 {
   "sessions": [
     {
-      "name": "Day One Session Two",
-      "startTime": "2024-11-25T09:20:00+07:00",
-      "endTime": "2024-11-25T11:00:00+07:00",
-      "loginPassword": "judson",
-      "exitPassword": "ochoa"
+      "name": "Day Two Session One",
+      "startTime": "2024-11-26T07:10:00+07:00",
+      "endTime": "2024-11-26T09:20:00+07:00",
+      "loginPassword": "molesey",
+      "exitPassword": "reindober"
     }
   ]
 }
