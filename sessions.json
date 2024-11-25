@@ -1,13 +1,6 @@
 {
   "sessions": [
     {
-      "name": "Trial",
-      "startTime": "2024-11-25T00:10:00+07:00",
-      "endTime": "2024-11-25T07:15:00+07:00",
-      "loginPassword": "masuk1", 
-      "exitPassword": "keluar1"
-    },
-    {
       "name": "Day One Session One",
       "startTime": "2024-11-25T07:10:00+07:00",
       "endTime": "2024-11-25T09:20:00+07:00",
