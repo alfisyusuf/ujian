@@ -1,11 +1,11 @@
 {
   "sessions": [
     {
-      "name": "Day 6 Session II",
-      "startTime": "2024-12-02T07:10:00+07:00",
-      "endTime": "2024-12-02T11:30:00+07:00",
-      "loginPassword": "Grm101",
-      "exitPassword": "Voc026"
+      "name": "Day 7 Session 1",
+      "startTime": "2024-12-03T07:10:00+07:00",
+      "endTime": "2024-12-03T11:30:00+07:00",
+      "loginPassword": "russel",
+      "exitPassword": "raywood"
     }
   ]
 }
