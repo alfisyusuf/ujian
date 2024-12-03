@@ -15,18 +15,125 @@
         />
 
         <style>
-            /* ... (previous styles remain the same) ... */
-
-            /* New styles for special buttons */
-            .special-buttons {
-                display: flex;
-                justify-content: center;
-                gap: 20px;
-                margin-top: 20px;
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
 
-            .special-button {
-                background: linear-gradient(45deg, #2ecc71, #27ae60);
+            body {
+                margin: 0;
+                font-family: "Poppins", sans-serif;
+                background: url("./tes.webp") no-repeat center center fixed;
+                background-size: cover;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                color: #fff;
+            }
+
+            #particles-js {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                z-index: 1;
+            }
+
+            .overlay {
+                background: rgba(0, 0, 0, 0.6);
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 2;
+            }
+
+            .motivational-box {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                padding: 30px 40px;
+                border-radius: 20px;
+                text-align: center;
+                max-width: 600px;
+                margin: 20px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                transform: translateY(-20px);
+            }
+
+            .motivational-box h2 {
+                font-size: 2.5em;
+                margin-bottom: 15px;
+                background: linear-gradient(45deg, #fff, #e0e0e0);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 700;
+            }
+
+            .motivational-box p {
+                font-size: 1.3em;
+                line-height: 1.6;
+                margin-bottom: 20px;
+                color: rgba(255, 255, 255, 0.9);
+            }
+
+            .session-badge {
+                display: inline-block;
+                background: rgba(78, 84, 200, 0.2);
+                border: 1px solid rgba(78, 84, 200, 0.3);
+                padding: 8px 15px;
+                border-radius: 30px;
+                font-size: 0.9em;
+                color: rgba(255, 255, 255, 0.9);
+                margin-top: 10px;
+                backdrop-filter: blur(5px);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .session-badge i {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                background: #4e54c8;
+                border-radius: 50%;
+                margin-right: 8px;
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(78, 84, 200, 0.7);
+                }
+
+                70% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 10px rgba(78, 84, 200, 0);
+                }
+
+                100% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(78, 84, 200, 0);
+                }
+            }
+
+            .exam-buttons-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 30px;
+            }
+
+            .exam-button-level {
+                background: linear-gradient(45deg, #4e54c8, #8f94fb);
                 color: #fff;
                 padding: 15px 30px;
                 border-radius: 50px;
@@ -34,27 +141,37 @@
                 border: none;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
             }
 
-            .special-button:hover {
+            .exam-button-level:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 10px 25px rgba(46, 204, 113, 0.4);
+                box-shadow: 0 10px 25px rgba(78, 84, 200, 0.4);
             }
 
-            .special-button:active {
+            .exam-button-level:active {
                 transform: translateY(1px);
             }
 
             @media (max-width: 768px) {
-                .special-buttons {
-                    flex-direction: column;
-                    align-items: center;
+                .motivational-box {
+                    margin: 20px;
+                    padding: 20px;
                 }
 
-                .special-button {
-                    width: 80%;
-                    margin-bottom: 10px;
+                .motivational-box h2 {
+                    font-size: 2em;
+                }
+
+                .motivational-box p {
+                    font-size: 1.1em;
+                }
+
+                .exam-button-level {
+                    padding: 12px 25px;
+                    font-size: 16px;
                 }
             }
         </style>
@@ -69,23 +186,84 @@
             >
                 <!-- Content will be dynamically inserted here -->
             </div>
-            <button
-                id="exam-button"
-                class="exam-button animate__animated animate__fadeInUp"
-                onclick="startExam()"
-                style="display: none"
-            >
-                Go to Exam Portal
-            </button>
-            <div id="special-buttons-container" class="special-buttons" style="display: none;">
-                <button class="special-button" onclick="startICT()">ICT</button>
-                <button class="special-button" onclick="startPKWU()">PKWU</button>
+            <div id="exam-buttons" class="exam-buttons-container" style="display: none;">
+                <!-- Exam buttons will be dynamically inserted here -->
             </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
         <script>
-            // Particle.js Configuration remains the same as in the previous code
+            // Particle.js Configuration
+            particlesJS("particles-js", {
+                particles: {
+                    number: {
+                        value: 100,
+                        density: { enable: true, value_area: 800 },
+                    },
+                    color: { value: "#ffffff" },
+                    shape: {
+                        type: "circle",
+                        stroke: { width: 0, color: "#000000" },
+                        polygon: { nb_sides: 5 },
+                    },
+                    opacity: {
+                        value: 0.3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 1,
+                            opacity_min: 0.1,
+                            sync: false,
+                        },
+                    },
+                    size: {
+                        value: 3,
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 2,
+                            size_min: 0.1,
+                            sync: false,
+                        },
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: "#ffffff",
+                        opacity: 0.2,
+                        width: 1,
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: "none",
+                        random: true,
+                        straight: false,
+                        out_mode: "out",
+                        bounce: false,
+                        attract: { enable: false, rotateX: 600, rotateY: 1200 },
+                    },
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: { enable: true, mode: "bubble" },
+                        onclick: { enable: true, mode: "push" },
+                        resize: true,
+                    },
+                    modes: {
+                        bubble: {
+                            distance: 200,
+                            size: 4,
+                            duration: 2,
+                            opacity: 0.8,
+                            speed: 3,
+                        },
+                        push: { particles_nb: 4 },
+                    },
+                },
+                retina_detect: true,
+            });
 
             // Check exam session status
             async function checkExamSession() {
@@ -102,15 +280,7 @@
                     const data = await response.json();
                     console.log("Loaded session ", data);
 
-                    // Get server time
-                    const serverTimeResponse = await fetch('/server-time');
-                    const serverTime = await serverTimeResponse.json();
-                    const now = new Date(serverTime.currentTime).getTime();
-
-                    // Specific condition for XII Grade Special Session
-                    const specialSessionStart = new Date('2023-12-04T09:20:00+07:00').getTime();
-                    const specialSessionEnd = new Date('2023-12-04T14:00:00+07:00').getTime();
-
+                    const now = new Date().getTime();
                     const currentSession = data.sessions.find((session) => {
                         const startTime = new Date(session.startTime).getTime();
                         const endTime = new Date(session.endTime).getTime();
@@ -118,22 +288,9 @@
                     });
 
                     const contentBox = document.getElementById("content-box");
-                    const examButton = document.getElementById("exam-button");
-                    const specialButtonsContainer = document.getElementById("special-buttons-container");
+                    const examButtonsContainer = document.getElementById("exam-buttons");
 
-                    // Check if it's the special session for XII Grade
-                    if (now >= specialSessionStart && now <= specialSessionEnd) {
-                        console.log("Special Session for XII Grade Active");
-                        contentBox.innerHTML = `
-                            <h2>Perhatian Kelas XII!</h2>
-                            <p>Silakan pilih mata pelajaran untuk mengerjakan ujian.</p>
-                            <div class="session-badge">
-                                <i></i>Sesi Khusus Kelas XII
-                            </div>
-                        `;
-                        examButton.style.display = "none";
-                        specialButtonsContainer.style.display = "flex";
-                    } else if (currentSession) {
+                    if (currentSession) {
                         console.log(
                             "Found active session:",
                             currentSession.name,
@@ -145,7 +302,15 @@
                                 <i></i>Session Active: ${currentSession.name}
                             </div>
                         `;
-                        examButton.style.display = "block";
+                        
+                        // Add buttons for different levels
+                        examButtonsContainer.innerHTML = `
+                            <button class="exam-button-level" onclick="startExam('X')">Level X Exam Portal</button>
+                            <button class="exam-button-level" onclick="startExam('XI')">Level XI Exam Portal</button>
+                            <button class="exam-button-level" onclick="startExam('XII_ICT')">Level XII ICT</button>
+                            <button class="exam-button-level" onclick="startExam('XII_PKWU')">Level XII PKWU</button>
+                        `;
+                        examButtonsContainer.style.display = "flex";
                     } else {
                         contentBox.innerHTML = `
                             <h2>Stay Tuned!</h2>
@@ -153,7 +318,7 @@
                         `;
                     }
                 } catch (error) {
-                    console.error("Error fetching session data:", error);
+                    console.error("Error fetching session ", error);
                     document.getElementById("content-box").innerHTML = `
                         <h2>Something Went Wrong</h2>
                         <p>Unable to load exam session details. Please try again later.</p>
@@ -162,17 +327,25 @@
             }
 
             // Start Exam function
-            function startExam() {
-                window.location.href = "https://74poo200dx2.alabidin.id/";
-            }
-
-            // Special functions for ICT and PKWU
-            function startICT() {
-                window.location.href = "https://74poo200dx2.alabidin.id/ict";
-            }
-
-            function startPKWU() {
-                window.location.href = "https://74poo200dx2.alabidin.id/pkwu";
+            function startExam(level) {
+                let examUrl = "https://74poo200dx2.alabidin.id/";
+                
+                switch(level) {
+                    case 'X':
+                        examUrl = "https://74poo200dx2.alabidin.id/";
+                        break;
+                    case 'XI':
+                        examUrl = "https://74poo200dx2.alabidin.id/";
+                        break;
+                    case 'XII_ICT':
+                        examUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdMKtmphsAuyQc4K87aJml2KfvcEzF-meCmQvoKIpXdQw6ifA/viewform?usp=sf_link";
+                        break;
+                    case 'XII_PKWU':
+                        examUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeWNtQOSjaNmDpFPfHwU8XsVq3JbO6-QY1gQd6gSDEgu_nwbg/viewform?usp=sf_link";
+                        break;
+                }
+                
+                window.location.href = examUrl;
             }
 
             // Load the session data and check the exam session when the page loads
