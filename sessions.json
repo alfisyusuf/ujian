@@ -1,11 +1,11 @@
 {
   "sessions": [
     {
-      "name": "Day 7 Session 1",
+      "name": "Day 7 Session 2",
       "startTime": "2024-12-03T07:10:00+07:00",
       "endTime": "2024-12-03T11:30:00+07:00",
-      "loginPassword": "russel",
-      "exitPassword": "raywood"
+      "loginPassword": "camellia",
+      "exitPassword": "silverberry"
     }
   ]
 }
