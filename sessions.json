@@ -1,11 +1,11 @@
 {
   "sessions": [
     {
-      "name": "Day 7 Session 2",
-      "startTime": "2024-12-03T07:10:00+07:00",
-      "endTime": "2024-12-03T11:30:00+07:00",
-      "loginPassword": "camellia",
-      "exitPassword": "silverberry"
+      "name": "Day 8 Session 1",
+      "startTime": "2024-12-04T07:10:00+07:00",
+      "endTime": "2024-12-04T11:30:00+07:00",
+      "loginPassword": "Net404",
+      "exitPassword": "App123"
     }
   ]
 }
