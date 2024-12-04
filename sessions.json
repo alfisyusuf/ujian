@@ -1,11 +1,11 @@
 {
   "sessions": [
     {
-      "name": "Day 8 Session 1",
+      "name": "Day 8 Session 2",
       "startTime": "2024-12-04T07:10:00+07:00",
       "endTime": "2024-12-04T11:30:00+07:00",
-      "loginPassword": "Net404",
-      "exitPassword": "App123"
+      "loginPassword": "Biz360",
+      "exitPassword": "Ent300"
     }
   ]
 }
