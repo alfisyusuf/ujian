@@ -124,20 +124,13 @@
                 }
             }
 
-            .exam-buttons-container {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 15px;
-                margin-top: 30px;
-            }
-
-            .exam-button-level {
+            .exam-button {
                 background: linear-gradient(45deg, #4e54c8, #8f94fb);
                 color: #fff;
-                padding: 15px 30px;
+                padding: 18px 40px;
                 border-radius: 50px;
-                font-size: 18px;
+                margin-top: 30px;
+                font-size: 20px;
                 border: none;
                 cursor: pointer;
                 transition: all 0.3s ease;
@@ -146,13 +139,33 @@
                 box-shadow: 0 6px 20px rgba(78, 84, 200, 0.3);
             }
 
-            .exam-button-level:hover {
+            .exam-button:hover {
                 transform: translateY(-3px);
                 box-shadow: 0 10px 25px rgba(78, 84, 200, 0.4);
             }
 
-            .exam-button-level:active {
+            .exam-button:active {
                 transform: translateY(1px);
+            }
+
+            .exam-button::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    120deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent
+                );
+                transition: 0.5s;
+            }
+
+            .exam-button:hover::before {
+                left: 100%;
             }
 
             @media (max-width: 768px) {
@@ -169,9 +182,9 @@
                     font-size: 1.1em;
                 }
 
-                .exam-button-level {
-                    padding: 12px 25px;
-                    font-size: 16px;
+                .exam-button {
+                    padding: 15px 30px;
+                    font-size: 18px;
                 }
             }
         </style>
@@ -186,9 +199,14 @@
             >
                 <!-- Content will be dynamically inserted here -->
             </div>
-            <div id="exam-buttons" class="exam-buttons-container" style="display: none;">
-                <!-- Exam buttons will be dynamically inserted here -->
-            </div>
+            <button
+                id="exam-button"
+                class="exam-button animate__animated animate__fadeInUp"
+                onclick="startExam()"
+                style="display: none"
+            >
+                Go to Exam Portal
+            </button>
         </div>
 
         <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -278,7 +296,7 @@
                         );
                     }
                     const data = await response.json();
-                    console.log("Loaded session ", data);
+                    console.log("Loaded session data:", data);
 
                     const now = new Date().getTime();
                     const currentSession = data.sessions.find((session) => {
@@ -288,7 +306,7 @@
                     });
 
                     const contentBox = document.getElementById("content-box");
-                    const examButtonsContainer = document.getElementById("exam-buttons");
+                    const examButton = document.getElementById("exam-button");
 
                     if (currentSession) {
                         console.log(
@@ -302,15 +320,7 @@
                                 <i></i>Session Active: ${currentSession.name}
                             </div>
                         `;
-                        
-                        // Add buttons for different levels
-                        examButtonsContainer.innerHTML = `
-                            <button class="exam-button-level" onclick="startExam('X')">Level X Exam Portal</button>
-                            <button class="exam-button-level" onclick="startExam('XI')">Level XI Exam Portal</button>
-                            <button class="exam-button-level" onclick="startExam('XII_ICT')">Level XII ICT</button>
-                            <button class="exam-button-level" onclick="startExam('XII_PKWU')">Level XII PKWU</button>
-                        `;
-                        examButtonsContainer.style.display = "flex";
+                        examButton.style.display = "block";
                     } else {
                         contentBox.innerHTML = `
                             <h2>Stay Tuned!</h2>
@@ -318,7 +328,7 @@
                         `;
                     }
                 } catch (error) {
-                    console.error("Error fetching session ", error);
+                    console.error("Error fetching session data:", error);
                     document.getElementById("content-box").innerHTML = `
                         <h2>Something Went Wrong</h2>
                         <p>Unable to load exam session details. Please try again later.</p>
@@ -327,25 +337,8 @@
             }
 
             // Start Exam function
-            function startExam(level) {
-                let examUrl = "https://74poo200dx2.alabidin.id/";
-                
-                switch(level) {
-                    case 'X':
-                        examUrl = "https://74poo200dx2.alabidin.id/";
-                        break;
-                    case 'XI':
-                        examUrl = "https://74poo200dx2.alabidin.id/";
-                        break;
-                    case 'XII_ICT':
-                        examUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdMKtmphsAuyQc4K87aJml2KfvcEzF-meCmQvoKIpXdQw6ifA/viewform?usp=sf_link";
-                        break;
-                    case 'XII_PKWU':
-                        examUrl = "https://docs.google.com/forms/d/e/1FAIpQLSeWNtQOSjaNmDpFPfHwU8XsVq3JbO6-QY1gQd6gSDEgu_nwbg/viewform?usp=sf_link";
-                        break;
-                }
-                
-                window.location.href = examUrl;
+            function startExam() {
+                window.location.href = "https://74poo200dx2.alabidin.id/";
             }
 
             // Load the session data and check the exam session when the page loads
