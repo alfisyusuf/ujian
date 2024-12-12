@@ -2,10 +2,10 @@
   "sessions": [
     {
       "name": "Susulan",
-      "startTime": "2024-12-06T07:00:00+07:00",
-      "endTime": "2024-12-07T14:00:00+07:00",
-      "loginPassword": "terserah",
-      "exitPassword": "apapun"
+      "startTime": "2024-12-12T07:00:00+07:00",
+      "endTime": "2024-12-20T14:00:00+07:00",
+      "loginPassword": "new",
+      "exitPassword": "best"
     }
   ]
 }
