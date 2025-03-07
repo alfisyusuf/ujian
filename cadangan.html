@@ -3,33 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Viewer - Bisa Scroll</title>
-    <style>
-        body { text-align: center; font-family: Arial, sans-serif; margin: 0; padding: 0; }
-        .pdf-container {
-            width: 100%;
-            height: 100vh; /* Full screen height */
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            overflow: auto;
-        }
-    </style>
+    <title>Halaman Ujian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>Dokumen PDF</h2>
-    <div class="pdf-container">
-        <iframe 
-            id="pdf-viewer"
-            src="https://drive.google.com/file/d/1OfUev-YV5KoXbu3-RY7NBun_fezo_h6u/preview"
-            allowfullscreen>
-        </iframe>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+        <!-- PDF Viewer (70%) -->
+        <div class="w-7/10 h-full">
+            <iframe 
+                src="https://drive.google.com/file/d/1OfUev-YV5KoXbu3-RY7NBun_fezo_h6u/preview"
+                class="w-full h-full border-none">
+            </iframe>
+        </div>
+
+        <!-- Panel Soal & Jawaban (30%) -->
+        <div class="w-3/10 bg-white shadow-lg p-4 overflow-y-auto">
+            <h2 class="text-lg font-bold text-center mb-4">Soal Ujian</h2>
+            <div id="soal-container">
+                <!-- Soal akan dibuat dengan JavaScript -->
+            </div>
+        </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const soalContainer = document.getElementById("soal-container");
+
+            for (let i = 1; i <= 25; i++) {
+                let soal = document.createElement("div");
+                soal.className = "mb-3 p-2 border rounded-lg";
+
+                let nomor = document.createElement("span");
+                nomor.className = "font-bold";
+                nomor.innerText = `Soal ${i}`;
+
+                let tombolContainer = document.createElement("div");
+                tombolContainer.className = "mt-2 flex space-x-1";
+
+                ["A", "B", "C", "D", "E"].forEach((option) => {
+                    let btn = document.createElement("button");
+                    btn.innerText = option;
+                    btn.className = "px-3 py-1 text-white bg-blue-500 hover:bg-blue-700 rounded-lg focus:outline-none";
+                    
+                    btn.addEventListener("click", function() {
+                        // Reset warna semua tombol di soal ini
+                        tombolContainer.querySelectorAll("button").forEach(b => b.classList.remove("bg-green-500"));
+                        // Tandai tombol yang diklik
+                        btn.classList.add("bg-green-500");
+                    });
+
+                    tombolContainer.appendChild(btn);
+                });
+
+                soal.appendChild(nomor);
+                soal.appendChild(tombolContainer);
+                soalContainer.appendChild(soal);
+            }
+        });
+    </script>
+
 </body>
 </html>
