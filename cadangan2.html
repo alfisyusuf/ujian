@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Ujian Online</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        .jawaban-selected {
+            background-color: #10B981 !important;
+        }
+        .jawaban-pending {
+            background-color: #FBBF24 !important;
+        }
+        .nomor-soal {
+            transition: all 0.2s ease-in-out;
+        }
+        .nomor-soal:hover {
+            transform: scale(1.05);
+        }
+        .timer {
+            font-family: monospace;
+        }
+        .pdf-controls {
+            background-color: rgba(0,0,0,0.05);
+        }
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .pdf-viewer, .panel-soal {
+                width: 100% !important;
+                height: 50vh !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="bg-blue-800 text-white p-3 flex justify-between items-center shadow-md">
+        <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h1 class="text-xl font-bold">Sistem Ujian Online</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="timer bg-gray-800 px-3 py-1 rounded-lg text-lg font-bold" id="exam-timer">00:00:00</div>
+            <button id="toggle-fullscreen" class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+                Layar Penuh
+            </button>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="main-container flex h-screen-minus-header" style="height: calc(100vh - 56px)">
+        <!-- PDF Viewer (50%) -->
+        <div class="pdf-viewer w-1/2 h-full flex flex-col bg-gray-800">
+            <div class="pdf-controls flex justify-between p-2 text-white">
+                <div class="flex space-x-2">
+                    <button id="prev-page" class="bg-gray-700 hover:bg-gray-600 rounded px-3 py-1 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Prev
+                    </button>
+                    <button id="next-page" class="bg-gray-700 hover:bg-gray-600 rounded px-3 py-1 flex items-center">
+                        Next
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex items-center">
+                    <span>Halaman: <span id="page-num">0</span> / <span id="page-count">0</span></span>
+                    <input id="zoom-level" type="range" min="50" max="200" value="100" class="ml-4 w-24">
+                    <span id="zoom-value" class="ml-2 w-12">100%</span>
+                </div>
+            </div>
+            <div id="pdf-container" class="flex-grow overflow-auto bg-gray-300">
+                <canvas id="pdf-render" class="mx-auto"></canvas>
+            </div>
+        </div>
+
+        <!-- Panel Soal & Jawaban (50%) -->
+        <div class="panel-soal w-1/2 bg-white shadow-lg flex flex-col">
+            <div class="p-4 bg-gray-50 border-b">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-gray-800">Soal Ujian</h2>
+                    <div class="flex space-x-2">
+                        <button id="show-all-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-md text-sm">
+                            Semua Soal
+                        </button>
+                        <button id="show-pending-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md text-sm">
+                            Belum Dijawab
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Navigasi Nomor Soal -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-medium text-gray-600 mb-2">Navigasi Soal:</h3>
+                    <div id="nomor-container" class="grid grid-cols-10 gap-2">
+                        <!-- Nomor soal akan dibuat dengan JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-grow overflow-y-auto p-4" id="soal-detail">
+                <div id="current-soal" class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <div class="flex justify-between mb-2">
+                        <h3 class="font-bold text-lg">Soal <span id="current-nomor">1</span></h3>
+                        <div>
+                            <span id="status-jawaban" class="px-2 py-1 rounded-full text-xs text-white bg-yellow-500">Belum Dijawab</span>
+                        </div>
+                    </div>
+                    <div id="soal-text" class="mb-4 text-gray-800">
+                        Soal akan ditampilkan di sini.
+                    </div>
+                    <div id="jawaban-container" class="space-y-3">
+                        <!-- Opsi jawaban akan ditampilkan di sini -->
+                    </div>
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <button id="prev-soal" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Soal Sebelumnya
+                    </button>
+                    
+                    <div>
+                        <button id="flag-soal" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-md flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                            </svg>
+                            Tandai
+                        </button>
+                    </div>
+                    
+                    <button id="next-soal" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
+                        Soal Selanjutnya
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-4 bg-gray-50 border-t">
+                <button id="finish-exam" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-bold text-lg flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Selesai & Kumpulkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="finish-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 shadow-xl max-w-md w-full">
+            <h3 class="text-xl font-bold mb-4">Konfirmasi Pengumpulan</h3>
+            <p class="mb-6 text-gray-700">Anda yakin ingin mengakhiri ujian dan mengumpulkan jawaban?</p>
+            <div id="jawaban-summary" class="mb-4 bg-gray-50 p-3 rounded">
+                <p>Jumlah soal: <span class="font-bold">25</span></p>
+                <p>Soal terjawab: <span id="answered-count" class="font-bold text-green-600">0</span></p>
+                <p>Soal belum terjawab: <span id="unanswered-count" class="font-bold text-yellow-600">25</span></p>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-finish" class="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100">
+                    Kembali ke Ujian
+                </button>
+                <button id="confirm-finish" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Ya, Kumpulkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data simulasi untuk soal ujian
+        const soalData = [];
+        for (let i = 1; i <= 25; i++) {
+            soalData.push({
+                nomor: i,
+                text: `Ini adalah teks untuk soal nomor ${i}. Silahkan baca dengan teliti dan pilih jawaban yang benar.`,
+                options: ["Opsi jawaban A", "Opsi jawaban B", "Opsi jawaban C", "Opsi jawaban D", "Opsi jawaban E"],
+                jawaban: null,
+                ditandai: false
+            });
+        }
+
+        let currentSoal = 1;
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        let scale = 1.0;
+        
+        // Timer untuk ujian (2 jam)
+        let totalSeconds = 2 * 60 * 60; // 2 jam dalam detik
+        let timerInterval;
+
+        // Inisialisasi PDF.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Inisialisasi nomor soal
+            const nomorContainer = document.getElementById("nomor-container");
+            for (let i = 1; i <= 25; i++) {
+                let nomorButton = document.createElement("button");
+                nomorButton.className = "nomor-soal w-full py-2 bg-gray-200 hover:bg-gray-300 rounded text-center font-medium text-gray-800";
+                nomorButton.innerText = i;
+                nomorButton.dataset.nomor = i;
+                nomorButton.addEventListener("click", function() {
+                    tampilkanSoal(i);
+                });
+                nomorContainer.appendChild(nomorButton);
+            }
+
+            // Load soal pertama
+            tampilkanSoal(1);
+            
+            // Inisialisasi PDF Viewer
+            initPDF('https://cors-anywhere.herokuapp.com/https://drive.google.com/uc?export=download&id=1OfUev-YV5KoXbu3-RY7NBun_fezo_h6u');
+
+            // Setup navigasi soal
+            document.getElementById("prev-soal").addEventListener("click", function() {
+                if (currentSoal > 1) {
+                    tampilkanSoal(currentSoal - 1);
+                }
+            });
+
+            document.getElementById("next-soal").addEventListener("click", function() {
+                if (currentSoal < 25) {
+                    tampilkanSoal(currentSoal + 1);
+                }
+            });
+
+            // Setup navigasi PDF
+            document.getElementById("prev-page").addEventListener("click", function() {
+                if (pageNum > 1) {
+                    pageNum--;
+                    queueRenderPage(pageNum);
+                }
+            });
+
+            document.getElementById("next-page").addEventListener("click", function() {
+                if (pdfDoc && pageNum < pdfDoc.numPages) {
+                    pageNum++;
+                    queueRenderPage(pageNum);
+                }
+            });
+
+            // Setup zoom
+            document.getElementById("zoom-level").addEventListener("input", function() {
+                scale = this.value / 100;
+                document.getElementById("zoom-value").textContent = this.value + "%";
+                queueRenderPage(pageNum);
+            });
+
+            // Setup filter buttons
+            document.getElementById("show-all-btn").addEventListener("click", function() {
+                document.querySelectorAll(".nomor-soal").forEach(btn => btn.style.display = "block");
+            });
+
+            document.getElementById("show-pending-btn").addEventListener("click", function() {
+                document.querySelectorAll(".nomor-soal").forEach(btn => {
+                    const nomor = parseInt(btn.dataset.nomor);
+                    if (soalData[nomor-1].jawaban !== null) {
+                        btn.style.display = "none";
+                    } else {
+                        btn.style.display = "block";
+                    }
+                });
+            });
+
+            // Setup tandai soal
+            document.getElementById("flag-soal").addEventListener("click", function() {
+                soalData[currentSoal-1].ditandai = !soalData[currentSoal-1].ditandai;
+                updateSoalUI();
+            });
+
+            // Setup modal konfirmasi
+            document.getElementById("finish-exam").addEventListener("click", function() {
+                updateJawabanSummary();
+                document.getElementById("finish-modal").classList.remove("hidden");
+            });
+
+            document.getElementById("cancel-finish").addEventListener("click", function() {
+                document.getElementById("finish-modal").classList.add("hidden");
+            });
+
+            document.getElementById("confirm-finish").addEventListener("click", function() {
+                // Di sini Anda bisa menambahkan kode untuk mengirim jawaban ke server
+                alert("Ujian berhasil dikumpulkan!");
+                document.getElementById("finish-modal").classList.add("hidden");
+                clearInterval(timerInterval);
+            });
+
+            // Setup fullscreen toggle
+            document.getElementById("toggle-fullscreen").addEventListener("click", toggleFullScreen);
+
+            // Mulai timer
+            startTimer();
+        });
+
+        function tampilkanSoal(nomor) {
+            currentSoal = nomor;
+            const soal = soalData[nomor - 1];
+            
+            // Update UI
+            document.getElementById("current-nomor").innerText = nomor;
+            document.getElementById("soal-text").innerText = soal.text;
+            
+            // Update status jawaban
+            const statusJawaban = document.getElementById("status-jawaban");
+            if (soal.jawaban === null) {
+                statusJawaban.innerText = "Belum Dijawab";
+                statusJawaban.className = "px-2 py-1 rounded-full text-xs text-white bg-yellow-500";
+            } else {
+                statusJawaban.innerText = "Sudah Dijawab";
+                statusJawaban.className = "px-2 py-1 rounded-full text-xs text-white bg-green-500";
+            }
+            
+            // Generate opsi jawaban
+            const jawabanContainer = document.getElementById("jawaban-container");
+            jawabanContainer.innerHTML = '';
+            
+            const optionLabels = ["A", "B", "C", "D", "E"];
+            soal.options.forEach((option, index) => {
+                const optionDiv = document.createElement("div");
+                optionDiv.className = "flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer";
+                if (soal.jawaban === index) {
+                    optionDiv.classList.add("bg-green-50", "border-green-300");
+                }
+                
+                const optionInput = document.createElement("input");
+                optionInput.type = "radio";
+                optionInput.name = "jawaban";
+                optionInput.id = `option-${index}`;
+                optionInput.className = "mr-3 h-5 w-5 cursor-pointer";
+                optionInput.checked = soal.jawaban === index;
+                
+                const optionLabel = document.createElement("label");
+                optionLabel.htmlFor = `option-${index}`;
+                optionLabel.className = "flex-grow cursor-pointer";
+                optionLabel.innerHTML = `<span class="font-bold mr-2">${optionLabels[index]}.</span> ${option}`;
+                
+                optionDiv.appendChild(optionInput);
+                optionDiv.appendChild(optionLabel);
+                
+                optionDiv.addEventListener("click", function() {
+                    pilihJawaban(index);
+                });
+                
+                jawabanContainer.appendChild(optionDiv);
+            });
+            
+            // Update UI nomor soal (highlight current)
+            document.querySelectorAll(".nomor-soal").forEach(btn => {
+                const btnNomor = parseInt(btn.dataset.nomor);
+                btn.classList.remove("bg-blue-500", "text-white", "bg-green-500", "bg-yellow-500", "border-2", "border-red-500");
+                
+                if (btnNomor === nomor) {
+                    btn.classList.add("bg-blue-500", "text-white");
+                } else if (soalData[btnNomor-1].jawaban !== null) {
+                    btn.classList.add("bg-green-500", "text-white");
+                } else {
+                    btn.classList.add("bg-yellow-500", "text-white");
+                }
+                
+                if (soalData[btnNomor-1].ditandai) {
+                    btn.classList.add("border-2", "border-red-500");
+                }
+            });
+            
+            updateSoalUI();
+        }
+        
+        function updateSoalUI() {
+            const flagBtn = document.getElementById("flag-soal");
+            if (soalData[currentSoal-1].ditandai) {
+                flagBtn.classList.remove("bg-red-100", "text-red-700");
+                flagBtn.classList.add("bg-red-500", "text-white");
+                flagBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                    </svg>
+                    Ditandai
+                `;
+            } else {
+                flagBtn.classList.remove("bg-red-500", "text-white");
+                flagBtn.classList.add("bg-red-100", "text-red-700");
+                flagBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                    </svg>
+                    Tandai
+                `;
+            }
+            
+            const nomorButtons = document.querySelectorAll(".nomor-soal");
+            nomorButtons.forEach(btn => {
+                const btnNomor = parseInt(btn.dataset.nomor);
+                btn.classList.remove("border-2", "border-red-500");
+                if (soalData[btnNomor-1].ditandai) {
+                    btn.classList.add("border-2", "border-red-500");
+                }
+            });
+        }
+
+        function pilihJawaban(index) {
+            soalData[currentSoal-1].jawaban = index;
+            tampilkanSoal(currentSoal);
+            
+            // Update jumlah jawaban di UI
+            let jawabanCount = soalData.filter(s => s.jawaban !== null).length;
+            document.getElementById("answered-count").innerText = jawabanCount;
+            document.getElementById("unanswered-count").innerText = 25 - jawabanCount;
+        }
+
+        function updateJawabanSummary() {
+            let jawabanCount = soalData.filter(s => s.jawaban !== null).length;
+            document.getElementById("answered-count").innerText = jawabanCount;
+            document.getElementById("unanswered-count").innerText = 25 - jawabanCount;
+        }
+
+        function initPDF(url) {
+            // Karena Drive Google tidak dapat diakses langsung, ini hanya simulasi tanpa load PDF asli
+            pdfDoc = { numPages: 10 }; // Simulasi PDF dengan 10 halaman
+            document.getElementById("page-count").textContent = pdfDoc.numPages;
+            pageNum = 1;
+            renderPage(pageNum);
+        }
+
+        function renderPage(num) {
+            pageRendering = true;
+            
+            // Karena ini hanya simulasi tanpa PDF asli:
+            const canvas = document.getElementById('pdf-render');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas dimensions
+            const viewport = { width: 800 * scale, height: 1100 * scale };
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            
+            // Simulasi render halaman
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = 'black';
+            ctx.font = '24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Halaman PDF ${num}`, canvas.width / 2, 100);
+            
+            // Simulasi konten
+            ctx.font = '16px Arial';
+            for (let i = 0; i < 20; i++) {
+                ctx.fillText(`Baris konten simulasi ${i+1} untuk halaman ${num}`, canvas.width / 2, 150 + i * 30);
+            }
+            
+            document.getElementById('page-num').textContent = num;
+            
+            pageRendering = false;
+            if (pageNumPending !== null) {
+                renderPage(pageNumPending);
+                pageNumPending = null;
+            }
+        }
+
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+
+        function startTimer() {
+            const timerElement = document.getElementById('exam-timer');
+            
+            timerInterval = setInterval(function() {
+                totalSeconds--;
+                
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu ujian habis!");
+                    document.getElementById("confirm-finish").click();
+                }
+                
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                
+                timerElement.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Berikan peringatan jika waktu hampir habis
+                if (totalSeconds <= 300) { // 5 menit terakhir
+                    timerElement.classList.add('bg-red-600');
+                    timerElement.classList.add('animate-pulse');
+                }
+            }, 1000);
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
