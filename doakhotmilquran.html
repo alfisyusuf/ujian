@@ -217,6 +217,24 @@
     
     <div class="container mt-3 mb-5">
         <div class="doa-card">
+            <div class="doa-header" onclick="toggleDoa('tawasul')">
+                <span>Tawasul</span>
+                <i class="fas fa-chevron-down" id="icon-tawasul"></i>
+            </div>
+            <div class="doa-content" id="doa-tawasul">
+                <div class="arabic-text">
+                    إلى حضرةِ النَّبِيِّ الْمُصْطَفَى مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَآلِهِ وَأَزْوَاجِهِ وَذُرِّيَّتِهِ وَأَهْلِ بَيْتِهِ الْكِرَامِ أَجْمَعِينَ، شَيْءٌ اللَّهُ لَهُمْ الْفَاتِحَةَ
+                </div>
+                <div class="arabic-text mt-4">
+                    ثُمَّ إِلَى حَضَرَاتِ إِخْوَانِهِ مِنَ الأَنْبِيَاءِ وَالْمُرْسَلِينَ وَالأَوْلِيَاءِ وَالشُّهَدَاءِ وَالصَّالِحِينَ وَالصَّحَابَةِ وَالتَّابِعِينَ وَالْعُلَمَاءِ الْعَامِلِينَ وَالْمُصْطَفِينَ الْمُخْلِصِينَ وَجَمِيعِ الْمَلَائِكَةِ الْمُقَرَّبِينَ، شَيْءٌ اللَّهُ لَهُمْ الْفَاتِحَةَ
+                </div>
+                <div class="arabic-text mt-4">
+                    ثُمَّ إِلَى جَمِيعِ أَهْلِ الْقُبُورِ مِنَ الْمُسْلِمِينَ وَالْمُسْلِمَاتِ وَالْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ مِنْ مَشَارِقِ الْأَرْضِ إِلَى مَغَارِبِهَا بَرِّهَا وَبَحْرِهَا خُصُوصًا إِلَى مَنْ لَهُ حَقٌّ عَلَيْنَا مِنْ آبَائِنَا وَأُمَّهَاتِنَا وَأَجْدَادِنَا وَجَدَّاتِنَا وَمَشَايِخِنَا وَأَسَاتِذَتِنَا وَلِمَنْ أَحْسَنَ إِلَيْنَا وَلِمَنْ اجْتَمَعْنَا هَهُنَا بِسَبَبِهِ شَيْءٌ اللَّهُ لَهُمُ الْفَاتِحَةَ
+                </div>
+            </div>
+        </div>
+
+        <div class="doa-card">
             <div class="doa-header" onclick="toggleDoa(1)">
                 <span>Doa 1</span>
                 <i class="fas fa-chevron-down" id="icon-1"></i>
@@ -404,9 +422,9 @@
             }
         });
         
-        // Auto-open first doa on page load
+        // Auto-open tawasul on page load
         window.addEventListener('DOMContentLoaded', () => {
-            toggleDoa(1);
+            toggleDoa('tawasul');
             
             // Handle visibility change to manage wakelock
             document.addEventListener('visibilitychange', async () => {
@@ -453,36 +471,46 @@
         }
         
         function navigateToNextDoa() {
-            const activeDoaId = findActiveDoaId();
-            if (activeDoaId < 6) {
-                toggleDoa(activeDoaId); // Close current
-                toggleDoa(activeDoaId + 1); // Open next
-                scrollToDoaHeader(activeDoaId + 1);
+            const doaIds = ['tawasul', 1, 2, 3, 4, 5, 6];
+            const activeDoaIndex = findActiveDoaIndex();
+            
+            if (activeDoaIndex < doaIds.length - 1) {
+                toggleDoa(doaIds[activeDoaIndex]); // Close current
+                toggleDoa(doaIds[activeDoaIndex + 1]); // Open next
+                scrollToDoaHeader(doaIds[activeDoaIndex + 1]);
             }
         }
         
         function navigateToPreviousDoa() {
-            const activeDoaId = findActiveDoaId();
-            if (activeDoaId > 1) {
-                toggleDoa(activeDoaId); // Close current
-                toggleDoa(activeDoaId - 1); // Open previous
-                scrollToDoaHeader(activeDoaId - 1);
+            const doaIds = ['tawasul', 1, 2, 3, 4, 5, 6];
+            const activeDoaIndex = findActiveDoaIndex();
+            
+            if (activeDoaIndex > 0) {
+                toggleDoa(doaIds[activeDoaIndex]); // Close current
+                toggleDoa(doaIds[activeDoaIndex - 1]); // Open previous
+                scrollToDoaHeader(doaIds[activeDoaIndex - 1]);
             }
         }
         
-        function findActiveDoaId() {
-            for (let i = 1; i <= 6; i++) {
-                if (document.getElementById(`doa-${i}`).classList.contains('active')) {
+        function findActiveDoaIndex() {
+            const doaIds = ['tawasul', 1, 2, 3, 4, 5, 6];
+            
+            for (let i = 0; i < doaIds.length; i++) {
+                if (document.getElementById(`doa-${doaIds[i]}`).classList.contains('active')) {
                     return i;
                 }
             }
-            return 1;
+            return 0;
         }
         
         function scrollToDoaHeader(id) {
-            const header = document.querySelector(`.doa-header[onclick="toggleDoa(${id})"]`);
+            const headerSelector = typeof id === 'number' 
+                ? `.doa-header[onclick="toggleDoa(${id})"]` 
+                : `.doa-header[onclick="toggleDoa('${id}')"]`;
+                
+            const header = document.querySelector(headerSelector);
             header.scrollIntoView({ behavior: 'smooth' });
         }
-    </script>
+    </script>    
 </body>
 </html>
