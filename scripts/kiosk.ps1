@@ -17,7 +17,7 @@ if (-not $chrome) {
 }
 
 # URL ujian
-$url = "https://ujian.sma-abbs.sch.id/"
+$url = "https://3vee813h71.alabidin.id/"
 
 # Jalankan Chrome dalam mode app + fullscreen
 Start-Process $chrome "--app=$url --start-fullscreen"
