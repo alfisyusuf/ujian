@@ -39,7 +39,7 @@
 
     <!-- Server Time Display -->
     <div id="serverTimeDisplay" class="bg-gray-50 rounded-lg p-3 mb-6 text-center hidden">
-      <div class="text-xs text-gray-500 mb-1">Waktu Server</div>
+      <div class="text-xs text-gray-500 mb-1">Waktu Server (WIB)</div>
       <div id="currentTime" class="text-sm font-mono text-gray-700"></div>
     </div>
 
@@ -87,7 +87,7 @@
     <!-- Message Display -->
     <div id="message" class="mt-6 p-4 rounded-lg text-center text-sm font-medium transition-all duration-300 opacity-0"></div>
 
-    <!-- Session Info (will be shown after successful login) -->
+    <!-- Session Info -->
     <div id="sessionInfo" class="mt-6 bg-green-50 border border-green-200 rounded-lg p-4 hidden">
       <div class="flex items-center mb-2">
         <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,15 +97,27 @@
       </div>
       <div id="sessionDetails" class="text-sm text-green-700 space-y-1"></div>
     </div>
+
+    <!-- Debug Info (for development) -->
+    <div id="debugInfo" class="mt-4 text-xs text-gray-500 hidden">
+      <div>Debug: <span id="debugText"></span></div>
+    </div>
   </div>
 
   <script>
     const urlJSON = 'https://script.google.com/macros/s/AKfycbysp3rSNRASlJfMsEzCKxntLjDBcl_DYFiqADTmeVGIZHwDoT-QVIgELMO6_wUpDLNFAw/exec?sheet=SessionList';
-    const urlNow = 'https://script.google.com/macros/s/AKfycbysp3rSNRASlJfMsEzCKxntLjDBcl_DYFiqADTmeVGIZHwDoT-QVIgELMO6_wUpDLNFAw/exec?action=now';
+    
+    // Multiple time API sources as fallback
+    const timeAPIs = [
+      'https://worldtimeapi.org/api/timezone/Asia/Jakarta',
+      'https://timeapi.io/api/Time/current/zone?timeZone=Asia/Jakarta',
+      'http://worldclockapi.com/api/json/asia/jakarta/now'
+    ];
 
     let sessions = [];
     let serverTime = null;
     let timeInterval = null;
+    let timeOffset = 0; // Offset between local time and server time
 
     const passwordInput = document.getElementById('passwordInput');
     const loginBtn = document.getElementById('loginBtn');
@@ -118,6 +130,19 @@
     const currentTimeDiv = document.getElementById('currentTime');
     const sessionInfo = document.getElementById('sessionInfo');
     const sessionDetails = document.getElementById('sessionDetails');
+    const debugInfo = document.getElementById('debugInfo');
+    const debugText = document.getElementById('debugText');
+
+    // Enable debug mode (set to false for production)
+    const DEBUG_MODE = false;
+
+    function debugLog(message) {
+      if (DEBUG_MODE) {
+        console.log(message);
+        debugText.textContent = message;
+        debugInfo.classList.remove('hidden');
+      }
+    }
 
     // Toggle password visibility
     togglePassword.addEventListener('click', () => {
@@ -139,35 +164,114 @@
       messageDiv.className = messageDiv.className.replace('opacity-100', 'opacity-0');
     }
 
+    // Parse date string with multiple formats
+    function parseDateTime(dateString) {
+      debugLog(`Parsing date: ${dateString}`);
+      
+      // Remove any extra spaces and normalize
+      const cleanDateString = dateString.trim();
+      
+      // Try different parsing methods
+      const formats = [
+        // ISO format: 2025-06-02T07:30:00
+        () => new Date(cleanDateString.replace(' ', 'T')),
+        // Direct parsing
+        () => new Date(cleanDateString),
+        // Manual parsing for format: YYYY-MM-DD HH:MM:SS
+        () => {
+          const match = cleanDateString.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
+          if (match) {
+            const [, year, month, day, hour, minute, second] = match;
+            return new Date(parseInt(year), parseInt(month) - 1, parseInt(day), 
+                          parseInt(hour), parseInt(minute), parseInt(second));
+          }
+          return null;
+        }
+      ];
+
+      for (const formatFn of formats) {
+        try {
+          const date = formatFn();
+          if (date && !isNaN(date.getTime())) {
+            debugLog(`Successfully parsed: ${date.toISOString()}`);
+            return date;
+          }
+        } catch (e) {
+          debugLog(`Parse attempt failed: ${e.message}`);
+        }
+      }
+
+      debugLog(`All parsing attempts failed for: ${dateString}`);
+      return null;
+    }
+
+    // Get current server time (with offset calculation)
+    function getCurrentServerTime() {
+      return new Date(Date.now() + timeOffset);
+    }
+
     // Update server time display
     function updateTimeDisplay() {
-      if (serverTime) {
-        const now = new Date(serverTime.getTime() + (Date.now() - serverTime.getTime()));
-        currentTimeDiv.textContent = now.toLocaleString('id-ID', {
-          timeZone: 'Asia/Jakarta',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        });
-      }
+      const now = getCurrentServerTime();
+      currentTimeDiv.textContent = now.toLocaleString('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
     }
 
     // Fetch sessions
     async function fetchSessions() {
       const res = await fetch(urlJSON);
       if (!res.ok) throw new Error('Gagal memuat data sesi');
-      return res.json();
+      const data = await res.json();
+      debugLog(`Loaded ${data.length} sessions`);
+      return data;
     }
 
-    // Fetch server time
+    // Fetch server time from multiple sources
     async function fetchServerTime() {
-      const res = await fetch(urlNow);
-      if (!res.ok) throw new Error('Gagal memuat waktu server');
-      const data = await res.json();
-      return new Date(data.serverTime);
+      for (const apiUrl of timeAPIs) {
+        try {
+          debugLog(`Trying time API: ${apiUrl}`);
+          const res = await fetch(apiUrl);
+          if (!res.ok) continue;
+          
+          const data = await res.json();
+          let serverDateTime;
+
+          // Handle different API response formats
+          if (data.datetime) {
+            // WorldTimeAPI format
+            serverDateTime = new Date(data.datetime);
+          } else if (data.dateTime) {
+            // TimeAPI.io format
+            serverDateTime = new Date(data.dateTime);
+          } else if (data.currentDateTime) {
+            // WorldClockAPI format
+            serverDateTime = new Date(data.currentDateTime);
+          }
+
+          if (serverDateTime && !isNaN(serverDateTime.getTime())) {
+            // Calculate offset between server time and local time
+            timeOffset = serverDateTime.getTime() - Date.now();
+            debugLog(`Time offset calculated: ${timeOffset}ms`);
+            return serverDateTime;
+          }
+        } catch (e) {
+          debugLog(`Time API failed: ${apiUrl} - ${e.message}`);
+          continue;
+        }
+      }
+      
+      // Fallback to local time if all APIs fail
+      debugLog('All time APIs failed, using local time');
+      timeOffset = 0;
+      return new Date();
     }
 
     // Initialize
@@ -199,6 +303,7 @@
         loginBtn.disabled = true;
         btnText.textContent = 'Gagal Memuat Data';
         loadingIcon.classList.add('hidden');
+        debugLog(`Init error: ${e.message}`);
       }
     }
 
@@ -226,31 +331,52 @@
         return;
       }
 
-      // Parse session times
-      const mulai = new Date(sesi['Waktu Mulai'].replace(' ', 'T'));
-      const selesai = new Date(sesi['Waktu Selesai'].replace(' ', 'T'));
-      const currentServerTime = new Date(serverTime.getTime() + (Date.now() - serverTime.getTime()));
+      debugLog(`Found session: ${JSON.stringify(sesi)}`);
+
+      // Parse session times with better error handling
+      const mulai = parseDateTime(sesi['Waktu Mulai']);
+      const selesai = parseDateTime(sesi['Waktu Selesai']);
+      
+      if (!mulai || !selesai) {
+        showMessage('Format waktu sesi tidak valid. Hubungi administrator.', 'error');
+        debugLog(`Invalid time format - Mulai: ${sesi['Waktu Mulai']}, Selesai: ${sesi['Waktu Selesai']}`);
+        return;
+      }
+
+      const currentServerTime = getCurrentServerTime();
+      debugLog(`Current time: ${currentServerTime.toISOString()}`);
+      debugLog(`Session start: ${mulai.toISOString()}`);
+      debugLog(`Session end: ${selesai.toISOString()}`);
 
       // Check if session is active
       if (currentServerTime < mulai) {
         const timeUntilStart = Math.ceil((mulai - currentServerTime) / (1000 * 60));
         showMessage(`Sesi ujian belum dimulai. Dimulai dalam ${timeUntilStart} menit.`, 'error');
+        debugLog(`Session not started yet. Minutes until start: ${timeUntilStart}`);
         return;
       }
       
       if (currentServerTime > selesai) {
-        showMessage('Maaf, sesi ujian sudah selesai.', 'error');
+        const timeAfterEnd = Math.ceil((currentServerTime - selesai) / (1000 * 60));
+        showMessage(`Maaf, sesi ujian sudah selesai ${timeAfterEnd} menit yang lalu.`, 'error');
+        debugLog(`Session ended. Minutes after end: ${timeAfterEnd}`);
         return;
       }
 
+      // Calculate remaining time
+      const remainingMinutes = Math.floor((selesai - currentServerTime) / (1000 * 60));
+      
       // Show session info
       sessionDetails.innerHTML = `
         <div><strong>Mata Pelajaran:</strong> ${sesi['Mata Pelajaran']}</div>
-        <div><strong>Waktu:</strong> ${mulai.toLocaleString('id-ID')} - ${selesai.toLocaleString('id-ID')}</div>
+        <div><strong>Waktu Mulai:</strong> ${mulai.toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}</div>
+        <div><strong>Waktu Selesai:</strong> ${selesai.toLocaleString('id-ID', {timeZone: 'Asia/Jakarta'})}</div>
+        <div><strong>Sisa Waktu:</strong> ${remainingMinutes} menit</div>
       `;
       sessionInfo.classList.remove('hidden');
       
       showMessage('Password benar, mengalihkan ke ujian...', 'success');
+      debugLog(`Session valid. Redirecting to: ${sesi['URL Ujian']}`);
       
       // Disable form
       loginBtn.disabled = true;
@@ -272,6 +398,32 @@
     // Cleanup interval on page unload
     window.addEventListener('beforeunload', () => {
       if (timeInterval) clearInterval(timeInterval);
+    });
+
+    // Add keyboard shortcut for debug mode (Ctrl+Shift+D)
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        debugInfo.classList.toggle('hidden');
+        console.log('Debug mode toggled');
+        console.log('Sessions:', sessions);
+        console.log('Server time:', serverTime);
+        console.log('Time offset:', timeOffset);
+        console.log('Current server time:', getCurrentServerTime());
+      }
+    });
+
+    // Add refresh button for time sync (Ctrl+R equivalent)
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 't') {
+        e.preventDefault();
+        fetchServerTime().then(newTime => {
+          serverTime = newTime;
+          showMessage('Waktu server diperbarui', 'success');
+          setTimeout(hideMessage, 2000);
+        }).catch(err => {
+          showMessage('Gagal memperbarui waktu server', 'error');
+        });
+      }
     });
   </script>
 </body>
