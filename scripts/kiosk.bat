@@ -15,7 +15,7 @@ if exist "%CHROME1%" (
     exit /b
 )
 
-set "URL=https://ujian.sma-abbs.sch.id/"
+set "URL=https://3vee813h71.alabidin.id/"
 start "" "%CHROME%" --app=%URL% --start-fullscreen
 
 endlocal
