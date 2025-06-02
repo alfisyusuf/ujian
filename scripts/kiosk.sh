@@ -8,11 +8,5 @@ if [ ! -x "$FIREFOX" ]; then
     exit 1
 fi
 
-# Coba jalankan dengan --kiosk
-$FIREFOX --kiosk "$URL" 2>/dev/null &
-
-sleep 3
-if ! pgrep -f "$FIREFOX.*$URL" > /dev/null; then
-    echo "Mode kiosk gagal. Coba fullscreen biasa..."
-    $FIREFOX --start-fullscreen "$URL" &
-fi
+# Jalankan langsung, tanpa redirect error/output, di background
+nohup $FIREFOX --kiosk "$URL" >/dev/null 2>&1 &
