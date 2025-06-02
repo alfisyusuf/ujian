@@ -1,13 +1,15 @@
 #!/bin/bash
 
+# URL tujuan ujian
 URL="https://3vee813h71.alabidin.id"
 
-# Lokasi Chromium
-BROWSER=$(which chromium || which google-chrome)
-
-if [ -z "$BROWSER" ]; then
-    echo "Chromium/Chrome tidak ditemukan."
+# Cek apakah Firefox terinstal
+if ! command -v firefox &> /dev/null
+then
+    echo "Firefox tidak ditemukan. Silakan install terlebih dahulu."
     exit 1
 fi
 
-$BROWSER --app="$URL" --start-fullscreen
+# Jalankan Firefox dalam fullscreen mode
+# --kiosk hanya tersedia di Firefox versi terbaru (v71+)
+firefox --kiosk "$URL"
