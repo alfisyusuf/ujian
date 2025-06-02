@@ -1,12 +1,15 @@
 #!/bin/bash
 
+# URL tujuan ujian
 URL="https://3vee813h71.alabidin.id"
-FIREFOX="/usr/bin/firefox"
 
-if [ ! -x "$FIREFOX" ]; then
-    echo "Firefox tidak ditemukan di $FIREFOX"
+# Cek apakah Firefox terinstal
+if ! command -v firefox &> /dev/null
+then
+    echo "Firefox tidak ditemukan. Silakan install terlebih dahulu."
     exit 1
 fi
 
-# Jalankan langsung, tanpa redirect error/output, di background
-nohup $FIREFOX --kiosk "$URL" >/dev/null 2>&1 &
+# Jalankan Firefox dalam fullscreen mode
+# --kiosk hanya tersedia di Firefox versi terbaru (v71+)
+firefox --kiosk "$URL"
