@@ -14,7 +14,7 @@ if %errorLevel% neq 0 (
     echo PERINGATAN: Script ini memerlukan hak administrator
     echo untuk keamanan ujian yang optimal.
     echo.
-    echo Klik kanan pada file dan pilih "Run as administrator"
+    echo Silakan buka CMD sebagai administrator dan jalankan ulang perintah
     pause
     exit /b
 )
@@ -60,11 +60,6 @@ start "" "%CHROME%" ^
     --disable-infobars ^
     --disable-web-security ^
     --disable-features=TranslateUI ^
-    --disable-ipc-flooding-protection ^
-    --disable-background-timer-throttling ^
-    --disable-renderer-backgrounding ^
-    --disable-backgrounding-occluded-windows ^
-    --disable-background-networking ^
     --disable-dev-tools ^
     --disable-extensions ^
     --disable-plugins ^
@@ -82,22 +77,24 @@ echo - Jangan tutup jendela browser
 echo - Jangan tekan Alt+Tab atau Windows key  
 echo - Fokus hanya pada ujian
 echo.
-echo Untuk mengakhiri ujian dengan aman,
-echo tutup browser dan jalankan file restore.bat
-echo.
 
-:: Buat file restore otomatis
-echo @echo off > restore.bat
-echo echo Mengembalikan pengaturan sistem... >> restore.bat
-echo reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskMgr /f ^>nul 2^>^&1 >> restore.bat
-echo reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegistryTools /f ^>nul 2^>^&1 >> restore.bat
-echo reg delete "HKCU\Software\Policies\Microsoft\Windows\System" /v DisableCMD /f ^>nul 2^>^&1 >> restore.bat
-echo echo Pengaturan sistem telah dikembalikan normal. >> restore.bat
-echo pause >> restore.bat
+:: Buat file restore di Desktop
+echo @echo off > "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo ======================================== >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo    MENGEMBALIKAN PENGATURAN SISTEM >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo ======================================== >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo. >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo Sedang mengembalikan pengaturan normal... >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableTaskMgr /f ^>nul 2^>^&1 >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v DisableRegistryTools /f ^>nul 2^>^&1 >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo reg delete "HKCU\Software\Policies\Microsoft\Windows\System" /v DisableCMD /f ^>nul 2^>^&1 >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo. >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo Pengaturan sistem telah dikembalikan ke normal. >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo echo. >> "%USERPROFILE%\Desktop\restore-ujian.bat"
+echo pause >> "%USERPROFILE%\Desktop\restore-ujian.bat"
 
-echo File restore.bat telah dibuat untuk mengembalikan pengaturan.
+echo File restore-ujian.bat telah dibuat di Desktop.
 
-:: Wait untuk memastikan Chrome terbuka
 timeout /t 3 /nobreak >nul
 
 endlocal
